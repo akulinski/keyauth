@@ -1,0 +1,11 @@
+version: '2'
+services:
+  keyauthservice-postgresql:
+    image: postgres:11.2
+    volumes:
+         - ~/volumes/akulinski/keyauthservice/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=keyauthservice
+      - POSTGRES_PASSWORD=keyauthservice
+    ports:
+      - 5432:5432
