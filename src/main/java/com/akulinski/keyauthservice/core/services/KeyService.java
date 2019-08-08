@@ -12,10 +12,13 @@ import java.util.List;
 @Service
 public class KeyService {
 
+    private final ValidationService validationService;
+
     private final KeyRepository keyRepository;
 
-    public KeyService(KeyRepository keyRepository) {
+    public KeyService(KeyRepository keyRepository, ValidationService validationService) {
         this.keyRepository = keyRepository;
+        this.validationService = validationService;
     }
 
     public Key addKeyFromDTO(KeyDTO keyDTO) {
@@ -38,4 +41,10 @@ public class KeyService {
         Long keyId = Long.parseLong(id);
         return keyRepository.findById(keyId).orElseThrow(() -> new IllegalArgumentException(String.format("Id of: %s Not found", id)));
     }
+
+
+    public Boolean validateKey(KeyDTO keyDTO) {
+        return validationService.validateRegex(keyDTO.getKeyValue());
+    }
+
 }
