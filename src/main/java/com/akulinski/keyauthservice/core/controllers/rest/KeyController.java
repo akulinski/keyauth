@@ -21,14 +21,25 @@ public class KeyController {
         return ResponseEntity.ok(keyService.findAll());
     }
 
-
     @PostMapping("/keys")
     public ResponseEntity addKey(@RequestBody KeyDTO keyDTO) {
 
         final Key key = keyService.addKeyFromDTO(keyDTO);
+        if (key != null) {
+            return ResponseEntity.ok(key);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-        if (key != null) return ResponseEntity.ok(key);
-        else return ResponseEntity.badRequest().build();
+    @PostMapping("/redeem")
+    public ResponseEntity redeem(@RequestBody KeyDTO keyDTO) {
+        final Boolean redeem = keyService.redeem(keyDTO);
+        if (redeem) {
+            return ResponseEntity.ok(keyDTO);
+        } else {
+            return ResponseEntity.badRequest().body(keyDTO);
+        }
     }
 
 }

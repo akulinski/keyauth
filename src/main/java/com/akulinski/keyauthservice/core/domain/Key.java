@@ -4,6 +4,7 @@ package com.akulinski.keyauthservice.core.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -22,7 +23,7 @@ public class Key implements Serializable {
     @Column
     private String ident;
 
-    @Column
+    @Column(unique = true, columnDefinition = "TEXT")
     private String keyValue;
 
     @Column

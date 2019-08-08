@@ -29,11 +29,11 @@ public class DataMockConfig {
     @EventListener(ApplicationReadyEvent.class)
     public void mockData() {
 
-        long diff = 1000L - keyRepository.count();
+        long diff = 10L - keyRepository.count();
 
         Stream.generate(() -> {
             Key key = new Key();
-            key.setKeyValue(faker.shakespeare().asYouLikeItQuote());
+            key.setKeyValue(faker.shakespeare().asYouLikeItQuote() + faker.random().hex(100));
             key.setIdent(faker.idNumber().valid());
             key.setUseDate(new Date().toInstant());
             return key;

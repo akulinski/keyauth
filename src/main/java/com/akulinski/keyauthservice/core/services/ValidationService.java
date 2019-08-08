@@ -3,17 +3,19 @@ package com.akulinski.keyauthservice.core.services;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.regex.Pattern;
 
 @Service
 public class ValidationService {
 
-    @Value("config.key.pattern")
+    @Value("${config.key.pattern}")
     private String patternString;
 
     private Pattern pattern;
 
-    public ValidationService() {
+    @PostConstruct
+    public void init() {
         pattern = Pattern.compile(patternString);
     }
 

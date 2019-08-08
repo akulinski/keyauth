@@ -23,13 +23,17 @@ public class KeyService {
 
     public Key addKeyFromDTO(KeyDTO keyDTO) {
 
-        Key key = new Key();
-        key.setIdent(keyDTO.getIdent());
-        key.setKeyValue(keyDTO.getKeyValue());
-        key.setIsUsed(Boolean.FALSE);
-        key.setUseDate(new Date().toInstant());
+        if (validateKey(keyDTO)) {
 
-        return keyRepository.save(key);
+            Key key = new Key();
+            key.setIdent(keyDTO.getIdent());
+            key.setKeyValue(keyDTO.getKeyValue());
+            key.setIsUsed(Boolean.FALSE);
+            key.setUseDate(new Date().toInstant());
+
+            return keyRepository.save(key);
+        }
+        return null;
     }
 
 
@@ -43,8 +47,22 @@ public class KeyService {
     }
 
 
-    public Boolean validateKey(KeyDTO keyDTO) {
+    private Boolean validateKey(KeyDTO keyDTO) {
         return validationService.validateRegex(keyDTO.getKeyValue());
+    }
+
+
+    public Boolean redeem(KeyDTO keyDTO) {
+        final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
+
+        if (byKeyValue.isPresent() && !byKeyValue.get().getIsUsed()) {
+            byKeyValue.get().setIsUsed(Boolean.TRUE);
+            byKeyValue.get().setUseDate(new Date().toInstant());
+            keyRepository.save(byKeyValue.get());
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
     }
 
 }
