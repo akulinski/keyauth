@@ -7,6 +7,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://keyauthservice-postgresql:5432/keyauthservice
       - SPRING_REDIS_HOST=keyauthservice-redis
+      - SPRING_PROFILES_ACTIVE=dev
     ports:
       - "8080:8080"
     depends_on:
@@ -32,7 +33,17 @@ services:
   keyauthservice-keyclock:
     extends:
       service: keycloak
-      file: keyclock.yaml
+      file: keycloak.yaml
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keyauthservice-keyclock-postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+
     depends_on:
       - keyauthservice-keyclock-postgres
     links:
@@ -40,7 +51,7 @@ services:
   keyauthservice-keyclock-postgres:
     extends:
       service: postgres
-      file: keyclock.yaml
+      file: keycloak.yaml
 
 volumes:
   logvolume01: {}

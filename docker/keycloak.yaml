@@ -15,6 +15,8 @@ services:
       POSTGRES_PASSWORD: password
   keycloak:
     image: jboss/keycloak
+    volumes:
+      - ./export.json:/tmp/export.json
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -30,3 +32,5 @@ services:
       - 9000:8080
       - 8180:8180
       - 9990:9990
+    command:
+      - "-Dkeycloak.import=/tmp/export.json"
