@@ -6,17 +6,25 @@ services:
       dockerfile: ./docker/Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://keyauthservice-postgresql:5432/keyauthservice
+      - SPRING_REDIS_HOST=keyauthservice-redis
     ports:
       - "8080:8080"
     depends_on:
       - keyauthservice-postgresql
+      - keyauthservice-redis
     links:
       - keyauthservice-postgresql
+      - keyauthservice-redis
     volumes:
       - /tmp:/tmp
   keyauthservice-postgresql:
     extends:
       file: postgres.yaml
       service: keyauthservice-postgresql
+
+  keyauthservice-redis:
+    extends:
+      file: redis.yaml
+      service: redis
 volumes:
   logvolume01: {}

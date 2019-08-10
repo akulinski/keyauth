@@ -1,4 +1,4 @@
 FROM openjdk:11.0.4-jdk
 VOLUME /tmp
 ADD target/keyauthservice-0.0.1-SNAPSHOT.jar keyauthservice.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/keyauthservice.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=dev","-jar","/keyauthservice.jar"]
