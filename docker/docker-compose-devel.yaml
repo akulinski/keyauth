@@ -12,9 +12,11 @@ services:
     depends_on:
       - keyauthservice-postgresql
       - keyauthservice-redis
+      - keyauthservice-keyclock
     links:
       - keyauthservice-postgresql
       - keyauthservice-redis
+      - keyauthservice-keyclock
     volumes:
       - /tmp:/tmp
   keyauthservice-postgresql:
@@ -26,5 +28,19 @@ services:
     extends:
       file: redis.yaml
       service: redis
+
+  keyauthservice-keyclock:
+    extends:
+      service: keycloak
+      file: keyclock.yaml
+    depends_on:
+      - keyauthservice-keyclock-postgres
+    links:
+      - keyauthservice-keyclock-postgres
+  keyauthservice-keyclock-postgres:
+    extends:
+      service: postgres
+      file: keyclock.yaml
+
 volumes:
   logvolume01: {}

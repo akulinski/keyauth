@@ -40,8 +40,7 @@ public class DataMockConfig {
             key.setKeyValue(faker.shakespeare().asYouLikeItQuote() + faker.random().hex(100));
             key.setIdent(faker.idNumber().valid());
             key.setUseDate(new Date().toInstant());
-            redisTemplate.opsForList().leftPush(key.getIdent(), key);
-
+            redisTemplate.opsForList().leftPush("key", key);
             return key;
         }).limit(diff).forEach(keyRepository::save);
 

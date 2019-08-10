@@ -20,6 +20,13 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.19.v20190610</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -94,6 +101,13 @@
             <artifactId>spring-boot-starter-cache</artifactId>
             <version>2.1.7.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-starter</artifactId>
+            <version>6.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -167,5 +181,17 @@
             </properties>
         </profile>
     </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-bom-parent</artifactId>
+                <version>6.0.1</version>
+                <type>pom</type>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
 </project>

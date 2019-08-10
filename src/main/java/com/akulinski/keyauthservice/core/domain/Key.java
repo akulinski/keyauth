@@ -4,7 +4,6 @@ package com.akulinski.keyauthservice.core.domain;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 

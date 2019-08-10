@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -42,8 +41,8 @@ public class KeyService {
     }
 
     @Cacheable(value = "key")
-    public List findAll() {
-        return Collections.singletonList(keyRepository.findAll());
+    public List<Key> findAll() {
+        return (List<Key>) keyRepository.findAll();
     }
 
     public Key findById(String id) {
