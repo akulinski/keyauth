@@ -5,6 +5,7 @@ import com.akulinski.keyauthservice.core.domain.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
@@ -52,5 +53,29 @@ class KeyServiceTest {
 
     @Test
     void findById() {
+    }
+
+    @BeforeEach
+    void setUp() {
+    }
+
+    @Test
+    void testAddKeyFromDTO() {
+    }
+
+    @Test
+    void testFindAll() {
+    }
+
+    @Test
+    void testFindById() {
+    }
+
+    @Test
+    void redeem() {
+    }
+
+    @Test
+    void validateRequest() {
     }
 }

@@ -42,4 +42,15 @@ public class KeyController {
         }
     }
 
+    @PostMapping("/validate")
+    public ResponseEntity validate(@RequestBody KeyDTO keyDTO) {
+        final Boolean validateRequest = keyService.validateRequest(keyDTO);
+
+        if (validateRequest) {
+            return ResponseEntity.ok(keyDTO);
+        }
+
+        return ResponseEntity.badRequest().body(keyDTO);
+    }
+
 }

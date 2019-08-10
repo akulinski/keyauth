@@ -22,16 +22,18 @@ public class KeyService {
     }
 
     public Key addKeyFromDTO(KeyDTO keyDTO) {
+        final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
+        if (byKeyValue.isEmpty()) {
+            if (validateKey(keyDTO)) {
 
-        if (validateKey(keyDTO)) {
+                Key key = new Key();
+                key.setIdent(keyDTO.getIdent());
+                key.setKeyValue(keyDTO.getKeyValue());
+                key.setIsUsed(Boolean.FALSE);
+                key.setUseDate(new Date().toInstant());
 
-            Key key = new Key();
-            key.setIdent(keyDTO.getIdent());
-            key.setKeyValue(keyDTO.getKeyValue());
-            key.setIsUsed(Boolean.FALSE);
-            key.setUseDate(new Date().toInstant());
-
-            return keyRepository.save(key);
+                return keyRepository.save(key);
+            }
         }
         return null;
     }
@@ -60,6 +62,21 @@ public class KeyService {
             byKeyValue.get().setUseDate(new Date().toInstant());
             keyRepository.save(byKeyValue.get());
             return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
+
+    public Boolean validateRequest(KeyDTO keyDTO) {
+        final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
+
+        if (byKeyValue.isPresent()) {
+            final var value = byKeyValue.get().getKeyValue();
+            final var ident = byKeyValue.get().getIdent();
+            final var isUsed = byKeyValue.get().getIsUsed();
+            if (keyDTO.getKeyValue().equals(value) && keyDTO.getIdent().equals(ident) && isUsed) {
+                return Boolean.TRUE;
+            }
         }
 
         return Boolean.FALSE;
