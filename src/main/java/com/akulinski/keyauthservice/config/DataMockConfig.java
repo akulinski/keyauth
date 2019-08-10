@@ -8,6 +8,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Date;
 import java.util.stream.Stream;
@@ -18,11 +19,14 @@ import java.util.stream.Stream;
 public class DataMockConfig {
     private Faker faker;
 
+    private final RedisTemplate<Object, Object> redisTemplate;
+
     private final KeyRepository keyRepository;
 
-    public DataMockConfig(KeyRepository keyRepository) {
+    public DataMockConfig(KeyRepository keyRepository, RedisTemplate<Object, Object> redisTemplate) {
         this.keyRepository = keyRepository;
         faker = new Faker();
+        this.redisTemplate = redisTemplate;
     }
 
 
@@ -36,6 +40,8 @@ public class DataMockConfig {
             key.setKeyValue(faker.shakespeare().asYouLikeItQuote() + faker.random().hex(100));
             key.setIdent(faker.idNumber().valid());
             key.setUseDate(new Date().toInstant());
+            redisTemplate.opsForList().leftPush(key.getIdent(), key);
+
             return key;
         }).limit(diff).forEach(keyRepository::save);
 

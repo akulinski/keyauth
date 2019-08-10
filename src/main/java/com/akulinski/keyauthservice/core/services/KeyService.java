@@ -3,6 +3,8 @@ package com.akulinski.keyauthservice.core.services;
 import com.akulinski.keyauthservice.core.domain.Key;
 import com.akulinski.keyauthservice.core.domain.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,6 +23,7 @@ public class KeyService {
         this.validationService = validationService;
     }
 
+    @CachePut(value = "key", key = "#keyDTO.ident")
     public Key addKeyFromDTO(KeyDTO keyDTO) {
         final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
         if (byKeyValue.isEmpty()) {
@@ -38,7 +41,7 @@ public class KeyService {
         return null;
     }
 
-
+    @Cacheable(value = "key")
     public List findAll() {
         return Collections.singletonList(keyRepository.findAll());
     }
@@ -53,7 +56,7 @@ public class KeyService {
         return validationService.validateRegex(keyDTO.getKeyValue());
     }
 
-
+    @Cacheable(value = "key", key = "#keyDTO.ident")
     public Boolean redeem(KeyDTO keyDTO) {
         final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
 
@@ -67,6 +70,7 @@ public class KeyService {
         return Boolean.FALSE;
     }
 
+    @Cacheable(value = "key", key = "#keyDTO.ident")
     public Boolean validateRequest(KeyDTO keyDTO) {
         final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
 
