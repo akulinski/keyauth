@@ -52,3 +52,5 @@ src/main/webapp/.env.production.local
 src/main/webapp/npm-debug.log*
 src/main/webapp/yarn-debug.log*
 src/main/webapp/yarn-error.log*
+
+docker/redis_data/*
