@@ -3,8 +3,8 @@ package com.akulinski.keyauthservice.core.services;
 import com.akulinski.keyauthservice.core.domain.Key;
 import com.akulinski.keyauthservice.core.domain.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,16 +13,18 @@ import java.util.List;
 @Service
 public class KeyService {
 
+    private final RedisTemplate<String, Key> redisTemplate;
+
     private final ValidationService validationService;
 
     private final KeyRepository keyRepository;
 
-    public KeyService(KeyRepository keyRepository, ValidationService validationService) {
+    public KeyService(KeyRepository keyRepository, ValidationService validationService, RedisTemplate redisTemplate) {
         this.keyRepository = keyRepository;
         this.validationService = validationService;
+        this.redisTemplate = redisTemplate;
     }
 
-    @CachePut(value = "key", key = "#keyDTO.ident")
     public Key addKeyFromDTO(KeyDTO keyDTO) {
         final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
         if (byKeyValue.isEmpty()) {
@@ -34,6 +36,7 @@ public class KeyService {
                 key.setIsUsed(Boolean.FALSE);
                 key.setUseDate(new Date().toInstant());
 
+                redisTemplate.opsForList().leftPush("key", key);
                 return keyRepository.save(key);
             }
         }
@@ -57,6 +60,7 @@ public class KeyService {
 
     @Cacheable(value = "key", key = "#keyDTO.ident")
     public Boolean redeem(KeyDTO keyDTO) {
+
         final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
 
         if (byKeyValue.isPresent() && !byKeyValue.get().getIsUsed()) {
