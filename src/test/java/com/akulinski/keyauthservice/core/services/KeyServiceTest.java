@@ -3,6 +3,7 @@ package com.akulinski.keyauthservice.core.services;
 import com.akulinski.keyauthservice.core.domain.Key;
 import com.akulinski.keyauthservice.core.domain.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
+import com.akulinski.keyauthservice.core.repositories.redis.KeyRedisRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,9 @@ class KeyServiceTest {
     @Mock
     private RedisTemplate redisTemplate;
 
+    @Mock
+    private KeyRedisRepository keyRedisRepository;
+
     @BeforeAll
     public void init() {
         keyRepository = mock(keyRepository.getClass());
@@ -40,7 +44,7 @@ class KeyServiceTest {
         when(keyRepository.findAll()).thenReturn(Stream.generate(Key::new).limit(10).collect(Collectors.toList()));
         when(keyRepository.save(any(Key.class))).thenReturn(new Key());
         when(keyRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new Key()));
-        keyService = new KeyService(keyRepository, validationService, redisTemplate);
+        keyService = new KeyService(keyRepository, validationService, redisTemplate, keyRedisRepository);
     }
 
     @Test
