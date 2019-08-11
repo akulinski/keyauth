@@ -3,12 +3,14 @@ package com.akulinski.keyauthservice.core.services;
 import com.akulinski.keyauthservice.core.domain.Key;
 import com.akulinski.keyauthservice.core.domain.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
+import com.akulinski.keyauthservice.core.repositories.redis.KeyRedisRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class KeyService {
@@ -19,10 +21,13 @@ public class KeyService {
 
     private final KeyRepository keyRepository;
 
-    public KeyService(KeyRepository keyRepository, ValidationService validationService, RedisTemplate redisTemplate) {
+    private final KeyRedisRepository keyRedisRepository;
+
+    public KeyService(KeyRepository keyRepository, ValidationService validationService, RedisTemplate redisTemplate, KeyRedisRepository keyRedisRepository) {
         this.keyRepository = keyRepository;
         this.validationService = validationService;
         this.redisTemplate = redisTemplate;
+        this.keyRedisRepository = keyRedisRepository;
     }
 
     public Key addKeyFromDTO(KeyDTO keyDTO) {
@@ -36,7 +41,7 @@ public class KeyService {
                 key.setIsUsed(Boolean.FALSE);
                 key.setUseDate(new Date().toInstant());
 
-                redisTemplate.opsForList().leftPush("key", key);
+                keyRedisRepository.save(key);
                 return keyRepository.save(key);
             }
         }
@@ -45,7 +50,8 @@ public class KeyService {
 
     @Cacheable(value = "key")
     public List<Key> findAll() {
-        return (List<Key>) keyRepository.findAll();
+
+        return (List<Key>) keyRedisRepository.findAll();
     }
 
     public Key findById(String id) {
@@ -58,35 +64,57 @@ public class KeyService {
         return validationService.validateRegex(keyDTO.getKeyValue());
     }
 
-    @Cacheable(value = "key", key = "#keyDTO.ident")
     public Boolean redeem(KeyDTO keyDTO) {
+        final var keyByRedis = keyRedisRepository.findByKeyValue(keyDTO.getKeyValue());
 
-        final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
+        if (keyByRedis.isPresent()) {
+            if (!keyByRedis.get().getIsUsed()) {
+                keyByRedis.get().setIsUsed(Boolean.TRUE);
+                keyByRedis.get().setUseDate(new Date().toInstant());
+                keyRepository.save(keyByRedis.get());
+                return Boolean.TRUE;
+            }
+        } else {
+            final var byKeyValue = keyRedisRepository.findByKeyValue(keyDTO.getKeyValue());
 
-        if (byKeyValue.isPresent() && !byKeyValue.get().getIsUsed()) {
-            byKeyValue.get().setIsUsed(Boolean.TRUE);
-            byKeyValue.get().setUseDate(new Date().toInstant());
-            keyRepository.save(byKeyValue.get());
-            return Boolean.TRUE;
+            if (byKeyValue.isPresent() && !byKeyValue.get().getIsUsed()) {
+                byKeyValue.get().setIsUsed(Boolean.TRUE);
+                byKeyValue.get().setUseDate(new Date().toInstant());
+                keyRepository.save(byKeyValue.get());
+                return Boolean.TRUE;
+            }
         }
-
         return Boolean.FALSE;
     }
 
     @Cacheable(value = "key", key = "#keyDTO.ident")
     public Boolean validateRequest(KeyDTO keyDTO) {
-        final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
 
-        if (byKeyValue.isPresent()) {
-            final var value = byKeyValue.get().getKeyValue();
-            final var ident = byKeyValue.get().getIdent();
-            final var isUsed = byKeyValue.get().getIsUsed();
-            if (keyDTO.getKeyValue().equals(value) && keyDTO.getIdent().equals(ident) && isUsed) {
-                return Boolean.TRUE;
+        final var keyByRedis = keyRedisRepository.findByKeyValue(keyDTO.getKeyValue());
+
+
+        if (keyByRedis.isPresent()) {
+            if (checkKeyFromOptional(keyDTO, keyByRedis)) return Boolean.TRUE;
+
+
+        } else {
+            final var byKeyValue = keyRepository.findByKeyValue(keyDTO.getKeyValue());
+
+            if (byKeyValue.isPresent()) {
+                if (checkKeyFromOptional(keyDTO, byKeyValue)) return Boolean.TRUE;
             }
         }
-
         return Boolean.FALSE;
+    }
+
+    private boolean checkKeyFromOptional(KeyDTO keyDTO, Optional<Key> keyByRedis) {
+        final var value = keyByRedis.get().getKeyValue();
+        final var ident = keyByRedis.get().getIdent();
+        final var isUsed = keyByRedis.get().getIsUsed();
+        if (keyDTO.getKeyValue().equals(value) && keyDTO.getIdent().equals(ident) && isUsed) {
+            return true;
+        }
+        return false;
     }
 
 }

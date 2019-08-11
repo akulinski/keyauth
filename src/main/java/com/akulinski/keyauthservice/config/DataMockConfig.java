@@ -2,8 +2,10 @@ package com.akulinski.keyauthservice.config;
 
 import com.akulinski.keyauthservice.core.domain.Key;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
+import com.akulinski.keyauthservice.core.repositories.redis.KeyRedisRepository;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -23,6 +25,9 @@ public class DataMockConfig {
 
     private final KeyRepository keyRepository;
 
+    @Autowired
+    private KeyRedisRepository keyRedisRepository;
+
     public DataMockConfig(KeyRepository keyRepository, RedisTemplate<Object, Object> redisTemplate) {
         this.keyRepository = keyRepository;
         faker = new Faker();
@@ -40,7 +45,7 @@ public class DataMockConfig {
             key.setKeyValue(faker.shakespeare().asYouLikeItQuote() + faker.random().hex(100));
             key.setIdent(faker.idNumber().valid());
             key.setUseDate(new Date().toInstant());
-            redisTemplate.opsForList().leftPush("key", key);
+            keyRedisRepository.save(key);
             return key;
         }).limit(diff).forEach(keyRepository::save);
 
