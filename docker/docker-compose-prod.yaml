@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: ../
-      dockerfile: ./docker/Dockerfile-devel
+      dockerfile: ./docker/Dockerfile-prod
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://keyauthservice-postgresql:5432/keyauthservice
       - SPRING_REDIS_HOST=keyauthservice-redis
@@ -22,16 +22,6 @@ services:
     volumes:
       - /tmp:/tmp
 
-  keyauthservice-react:
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile-react
-    volumes:
-      - '../src/main/webapp:/app'
-    ports:
-      - '3000:3000'
-    environment:
-      - NODE_ENV=development
   keyauthservice-postgresql:
     extends:
       file: postgres.yaml
