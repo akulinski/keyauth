@@ -20,6 +20,17 @@ services:
       - keyauthservice-keyclock
     volumes:
       - /tmp:/tmp
+
+  keyauthservice-react:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile-react
+    volumes:
+      - '../src/main/webapp:/app'
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
   keyauthservice-postgresql:
     extends:
       file: postgres.yaml
@@ -52,6 +63,8 @@ services:
     extends:
       service: postgres
       file: keycloak.yaml
+
+
 
 volumes:
   logvolume01: {}
