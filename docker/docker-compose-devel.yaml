@@ -25,7 +25,7 @@ services:
   keyauthservice-react:
     build:
       context: ../
-      dockerfile: ./docker/Dockerfile-react
+      dockerfile: Dockerfile-angular
     volumes:
       - '../src/main/webapp:/app'
     ports:

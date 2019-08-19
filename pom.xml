@@ -226,8 +226,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v8.9.4</nodeVersion>
-                                    <npmVersion>5.6.0</npmVersion>
+                                    <nodeVersion>v12.8.1</nodeVersion>
+                                    <npmVersion>6.10.3</npmVersion>
                                 </configuration>
                             </execution>
                             <execution>
@@ -259,7 +259,7 @@
                                 <configuration>
                                     <target>
                                         <copy todir="${project.build.directory}/classes/public">
-                                            <fileset dir="${project.basedir}/src/main/webapp/build"/>
+                                            <fileset dir="${project.basedir}/src/main/webapp/dist/webapp"/>
                                         </copy>
                                     </target>
                                 </configuration>
