@@ -1,7 +1,7 @@
 package com.akulinski.keyauthservice.core.services;
 
 import com.akulinski.keyauthservice.core.domain.Key;
-import com.akulinski.keyauthservice.core.domain.KeyDTO;
+import com.akulinski.keyauthservice.core.domain.dto.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
 import com.akulinski.keyauthservice.core.repositories.redis.KeyRedisRepository;
 import org.assertj.core.api.Assertions;

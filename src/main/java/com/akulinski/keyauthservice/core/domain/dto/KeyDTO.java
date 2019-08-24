@@ -1,4 +1,4 @@
-package com.akulinski.keyauthservice.core.domain;
+package com.akulinski.keyauthservice.core.domain.dto;
 
 import lombok.Data;
 
