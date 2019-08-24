@@ -22,6 +22,7 @@ services:
     volumes:
       - /tmp:/tmp
 
+
   keyauthservice-angular:
     build:
       context: ../
@@ -32,17 +33,21 @@ services:
       - '4200:4200'
     environment:
       - NODE_ENV=development
+
   keyauthservice-postgresql:
     extends:
       file: postgres.yaml
       service: keyauthservice-postgresql
+
 
   keyauthservice-redis:
     extends:
       file: redis.yaml
       service: redis
 
+
   keyauthservice-keyclock:
+
     extends:
       service: keycloak
       file: keycloak.yaml
@@ -66,6 +71,9 @@ services:
       file: keycloak.yaml
 
 
-
 volumes:
   logvolume01: {}
+  postgres: {}
+  postgres_data: {}
+
+
