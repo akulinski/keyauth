@@ -22,14 +22,14 @@ services:
     volumes:
       - /tmp:/tmp
 
-  keyauthservice-react:
+  keyauthservice-angular:
     build:
       context: ../
-      dockerfile: Dockerfile-angular
+      dockerfile: ./docker/Dockerfile-angular
     volumes:
       - '../src/main/webapp:/app'
     ports:
-      - '3000:3000'
+      - '4200:4200'
     environment:
       - NODE_ENV=development
   keyauthservice-postgresql:
