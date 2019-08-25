@@ -41,6 +41,7 @@ src/main/webapp/coverage
 
 # production
 src/main/webapp/build
+src/main/webapp/dist/**
 
 # misc
 src/main/webapp/.DS_Store

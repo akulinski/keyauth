@@ -14,58 +14,39 @@ services:
     depends_on:
       - keyauthservice-postgresql
       - keyauthservice-redis
-      - keyauthservice-keyclock
     links:
       - keyauthservice-postgresql
       - keyauthservice-redis
-      - keyauthservice-keyclock
     volumes:
       - /tmp:/tmp
 
-  keyauthservice-react:
+
+  keyauthservice-angular:
     build:
       context: ../
-      dockerfile: ./docker/Dockerfile-react
+      dockerfile: ./docker/Dockerfile-angular
     volumes:
       - '../src/main/webapp:/app'
     ports:
-      - '3000:3000'
+      - '4200:4200'
     environment:
       - NODE_ENV=development
+
   keyauthservice-postgresql:
     extends:
       file: postgres.yaml
       service: keyauthservice-postgresql
+
 
   keyauthservice-redis:
     extends:
       file: redis.yaml
       service: redis
 
-  keyauthservice-keyclock:
-    extends:
-      service: keycloak
-      file: keycloak.yaml
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: keyauthservice-keyclock-postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-
-    depends_on:
-      - keyauthservice-keyclock-postgres
-    links:
-      - keyauthservice-keyclock-postgres
-  keyauthservice-keyclock-postgres:
-    extends:
-      service: postgres
-      file: keycloak.yaml
-
-
 
 volumes:
   logvolume01: {}
+  postgres: {}
+  postgres_data: {}
+
+

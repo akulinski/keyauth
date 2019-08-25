@@ -1,7 +1,7 @@
 package com.akulinski.keyauthservice.core.controllers.rest;
 
 import com.akulinski.keyauthservice.core.domain.Key;
-import com.akulinski.keyauthservice.core.domain.KeyDTO;
+import com.akulinski.keyauthservice.core.domain.dto.KeyDTO;
 import com.akulinski.keyauthservice.core.services.KeyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

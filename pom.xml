@@ -23,6 +23,18 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
+            <version>1.0.10.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>9.4.19.v20190610</version>
@@ -101,16 +113,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-starter</artifactId>
-            <version>6.0.1</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
     </dependencies>
@@ -222,8 +231,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v8.9.4</nodeVersion>
-                                    <npmVersion>5.6.0</npmVersion>
+                                    <nodeVersion>v12.8.1</nodeVersion>
+                                    <npmVersion>6.10.3</npmVersion>
                                 </configuration>
                             </execution>
                             <execution>
@@ -255,7 +264,7 @@
                                 <configuration>
                                     <target>
                                         <copy todir="${project.build.directory}/classes/public">
-                                            <fileset dir="${project.basedir}/src/main/webapp/build"/>
+                                            <fileset dir="${project.basedir}/src/main/webapp/dist/webapp"/>
                                         </copy>
                                     </target>
                                 </configuration>
