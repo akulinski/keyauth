@@ -1,6 +1,7 @@
 package com.akulinski.keyauthservice.core.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
@@ -10,7 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "application")
-@Data
+@Getter
+@Setter
 @RedisHash("application")
 public class Application {
 

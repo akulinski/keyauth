@@ -1,16 +1,19 @@
 package com.akulinski.keyauthservice.core.domain;
 
-import lombok.Data;
-import org.springframework.data.redis.core.RedisHash;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity(name = "app_user")
 @Table(name = "app_user")
-@Data
-@RedisHash("app-user")
+@Getter
+@Setter
 public class AppUser {
 
     private static final long serialVersionUID = 1L;
@@ -32,8 +35,11 @@ public class AppUser {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "application_user",
-            joinColumns = {@JoinColumn(name = "app_user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "application_id")})
     private Set<Application> applications = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
 }

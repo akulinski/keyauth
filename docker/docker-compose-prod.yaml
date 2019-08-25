@@ -32,30 +32,8 @@ services:
       file: redis.yaml
       service: redis
 
-  keyauthservice-keyclock:
-    extends:
-      service: keycloak
-      file: keycloak.yaml
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: keyauthservice-keyclock-postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-
-    depends_on:
-      - keyauthservice-keyclock-postgres
-    links:
-      - keyauthservice-keyclock-postgres
-  keyauthservice-keyclock-postgres:
-    extends:
-      service: postgres
-      file: keycloak.yaml
-
-
 
 volumes:
   logvolume01: {}
+  postgres: {}
+  postgres_data: {}

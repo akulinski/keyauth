@@ -3,13 +3,14 @@ package com.akulinski.keyauthservice.core.controllers.rest;
 import com.akulinski.keyauthservice.core.domain.AppUser;
 import com.akulinski.keyauthservice.core.domain.dto.AddUserDTO;
 import com.akulinski.keyauthservice.core.services.AppUserService;
-import org.keycloak.KeycloakPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
@@ -23,12 +24,12 @@ public class ApplicationController {
 
     @GetMapping("/get-all-users")
     @PreAuthorize("hasRole('admin')")
-    public ResponseEntity getAllAppsWithUsers(){
+    public ResponseEntity getAllAppsWithUsers() {
         return ResponseEntity.ok(appUserService.getAllUsers());
     }
 
     @GetMapping("/get-user-apps")
-    public ResponseEntity getUserApps(KeycloakPrincipal principal) {
+    public ResponseEntity getUserApps(Principal principal) {
 
         final var username = principal.getName();
 
