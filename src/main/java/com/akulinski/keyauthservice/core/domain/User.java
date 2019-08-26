@@ -4,25 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Getter
 @Setter
-@Table(name = "main_user")
-@RedisHash("main_user")
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "main_user")
+@Entity(name = "main_users")
 public class User {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userGenerator")
+    @SequenceGenerator(name = "userGenerator", allocationSize = 1)
     private Long id;
 
     @Column

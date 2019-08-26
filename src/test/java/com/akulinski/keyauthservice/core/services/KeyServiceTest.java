@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,10 +28,6 @@ class KeyServiceTest {
     private ValidationService validationService;
 
     private KeyService keyService;
-
-    @Mock
-    private RedisTemplate redisTemplate;
-
     @BeforeAll
     public void init() {
         keyRepository = mock(keyRepository.getClass());
@@ -40,7 +35,7 @@ class KeyServiceTest {
         when(keyRepository.findAll()).thenReturn(Stream.generate(Key::new).limit(10).collect(Collectors.toList()));
         when(keyRepository.save(any(Key.class))).thenReturn(new Key());
         when(keyRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new Key()));
-        keyService = new KeyService(keyRepository, validationService, redisTemplate);
+        keyService = new KeyService(keyRepository, validationService);
     }
 
     @Test

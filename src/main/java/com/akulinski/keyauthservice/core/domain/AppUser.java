@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "app_user")
-@Table(name = "app_user")
+@Entity
+@Table
 @Getter
 @Setter
 public class AppUser {
@@ -19,8 +19,8 @@ public class AppUser {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appUserGenerator")
+    @SequenceGenerator(name = "appUserGenerator", allocationSize = 1)
     private Long id;
 
     @Column(unique = true)

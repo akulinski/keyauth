@@ -1,9 +1,6 @@
 package com.akulinski.keyauthservice.config;
 
-import com.akulinski.keyauthservice.core.domain.Key;
-import com.akulinski.keyauthservice.core.domain.Role;
-import com.akulinski.keyauthservice.core.domain.RoleType;
-import com.akulinski.keyauthservice.core.domain.User;
+import com.akulinski.keyauthservice.core.domain.*;
 import com.akulinski.keyauthservice.core.repositories.AppUserRepository;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
 import com.akulinski.keyauthservice.core.repositories.RoleRepository;
@@ -14,9 +11,12 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Configuration
@@ -61,8 +61,9 @@ public class DataMockConfig {
             return key;
         }).limit(diff).forEach(keyRepository::save);
 
+
         diff = 10L - appUserRepository.count();
-/*
+
         Stream.generate(() -> {
             User user = new User();
             user.setPassword(passwordEncoder.encode(faker.dog().name()));
@@ -90,7 +91,12 @@ public class DataMockConfig {
 
             appUser.setApplications(apps);
             return appUser;
-        }).limit(diff).forEach(appUserRepository::save);*/
+        }).limit(diff).forEach(appUser -> {
+            try {
+                appUserRepository.save(appUser);
+            } catch (DataIntegrityViolationException ignored) {
+            }
+        });
 
         if (userRepository.findByUsernameOrEmail("admin", "admin").isEmpty()) {
             User user = new User();
@@ -98,18 +104,21 @@ public class DataMockConfig {
             user.setName("admin");
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("admin"));
-            userRepository.save(user);
 
-            Role role1 = new Role();
-            role1.setUser(user);
-            role1.setRoleType(RoleType.ROLE_USER);
+            final User save = userRepository.save(user);
 
-            Role role2 = new Role();
-            role2.setUser(user);
-            role2.setRoleType(RoleType.ROLE_USER);
+            if (save != null) {
+                Role role1 = new Role();
+                role1.setUser(save);
+                role1.setRoleType(RoleType.ROLE_USER);
 
-            roleRepository.save(role1);
-            roleRepository.save(role2);
+                Role role2 = new Role();
+                role2.setUser(save);
+                role2.setRoleType(RoleType.ROLE_USER);
+
+                roleRepository.save(role1);
+                roleRepository.save(role2);
+            }
         }
     }
 }

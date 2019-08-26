@@ -4,7 +4,6 @@ import com.akulinski.keyauthservice.core.domain.Key;
 import com.akulinski.keyauthservice.core.domain.dto.KeyDTO;
 import com.akulinski.keyauthservice.core.repositories.KeyRepository;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,17 +13,14 @@ import java.util.Optional;
 @Service
 public class KeyService {
 
-    private final RedisTemplate<String, Key> redisTemplate;
-
     private final ValidationService validationService;
 
     private final KeyRepository keyRepository;
 
 
-    public KeyService(KeyRepository keyRepository, ValidationService validationService, RedisTemplate redisTemplate) {
+    public KeyService(KeyRepository keyRepository, ValidationService validationService) {
         this.keyRepository = keyRepository;
         this.validationService = validationService;
-        this.redisTemplate = redisTemplate;
     }
 
     public Key addKeyFromDTO(KeyDTO keyDTO) {
