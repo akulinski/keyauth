@@ -1,0 +1,41 @@
+config:
+  key:
+    pattern: ^\\d{2}+[A-z]{3}-\\d{3}\\w{2}\\d-\\w\\d\\w{2}-\\d{4}$
+    checksum:
+  bootstrapAddress: localhost:2181
+  groupId: test
+
+
+app:
+  jwtSecret: JWTSuperSecretKey
+  jwtExpirationInMs: 604800000
+
+spring:
+
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/keyauthservice
+    username: keyauthservice
+    password: keyauthservice
+    initialization-mode: always
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  cache:
+    type: redis
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+server:
+  port: 8081
