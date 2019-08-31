@@ -1,7 +1,7 @@
 package com.akulinski.keyauthservice;
 
-import com.akulinski.keyauthservice.core.services.kafka.RequestKeyEvent;
-import com.akulinski.keyauthservice.core.services.kafka.SerialKeyEventProducer;
+import com.akulinski.keyauthservice.core.services.rabbit.RequestKeyEvent;
+import com.akulinski.keyauthservice.core.services.rabbit.SerialKeyEventProducer;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +28,8 @@ public class KeyauthserviceApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void loadKafka() {
 
-        for (int i = 0; i < 100; i++) {
+        for (;;) {
+            System.out.println("Calling");
             RequestKeyEvent requestKeyEvent = new RequestKeyEvent();
             requestKeyEvent.setApplicationName(faker.app().name());
             requestKeyEvent.setUsername(faker.funnyName().name());

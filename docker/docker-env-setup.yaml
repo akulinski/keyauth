@@ -1,0 +1,47 @@
+version: '2.1'
+services:
+
+  keyauthservice-postgresql:
+    extends:
+      file: postgres.yaml
+      service: keyauthservice-postgresql
+    network_mode: bridge
+
+  keyauthservice-redis:
+    extends:
+      file: redis.yaml
+      service: redis
+    network_mode: bridge
+
+  zoo:
+    network_mode: bridge
+    image: zookeeper:3.4.9
+    hostname: zoo
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zoo:2888:3888
+    volumes:
+      - ./zk-single-kafka-single/zoo/data:/data
+      - ./zk-single-kafka-single/zoo/datalog:/datalog
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"
+    volumes:
+      - ./rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+
+
+volumes:
+  logvolume01: {}
+  postgres: {}
+  postgres_data: {}
+
+
