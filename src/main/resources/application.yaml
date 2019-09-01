@@ -8,6 +8,8 @@ app:
   jwtExpirationInMs: 604800000
 
 spring:
+  application:
+    name: keyauthservice
 
   main:
     allow-bean-definition-overriding: true
@@ -16,6 +18,12 @@ spring:
     username: keyauthservice
     password: keyauthservice
     initialization-mode: always
+
+  consul:
+    host: localhost
+    port: 8500
+    discovery:
+      instanceId: ${spring.application.name}:${random.value}
 
   jpa:
     properties:

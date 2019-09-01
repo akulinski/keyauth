@@ -12,7 +12,6 @@
     <artifactId>keyauthservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>keyauthservice</name>
-    <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>11</java.version>
@@ -21,6 +20,11 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-consul-all</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -344,10 +348,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.keycloak.bom</groupId>
-                <artifactId>keycloak-bom-parent</artifactId>
-                <version>6.0.1</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.M1</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
         </dependencies>

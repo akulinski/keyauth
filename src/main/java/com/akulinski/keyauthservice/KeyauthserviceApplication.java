@@ -27,14 +27,14 @@ public class KeyauthserviceApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void loadKafka() {
-
+/*
         for (;;) {
             System.out.println("Calling");
             RequestKeyEvent requestKeyEvent = new RequestKeyEvent();
             requestKeyEvent.setApplicationName(faker.app().name());
             requestKeyEvent.setUsername(faker.funnyName().name());
             serialKeyEventProducer.sendMessage(requestKeyEvent);
-        }
+        }*/
 
     }
 
